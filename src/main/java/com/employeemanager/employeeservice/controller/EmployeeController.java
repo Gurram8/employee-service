@@ -29,10 +29,5 @@ public class EmployeeController {
         employeeService.createEmployee(EmployeeRequest);
     }
 
-//    @PostMapping("/update")
-//    @ResponseStatus(HttpStatus.ACCEPTED)
-//    public void updateEmployee(@RequestBody EmployeeRequest EmployeeRequest) {
-//        employeeService.updateEmployee(EmployeeRequest);
-//    }
 
 }
