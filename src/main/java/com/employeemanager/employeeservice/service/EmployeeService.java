@@ -2,6 +2,7 @@ package com.employeemanager.employeeservice.service;
 
 import com.employeemanager.employeeservice.dto.EmployeeRequest;
 import com.employeemanager.employeeservice.dto.EmployeeResponse;
+import com.employeemanager.employeeservice.exception.ResourceNotFoundException;
 import com.employeemanager.employeeservice.model.Employee;
 import com.employeemanager.employeeservice.repository.EmployeeRepo;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,7 @@ public class EmployeeService {
 
     public void createEmployee(EmployeeRequest employeeRequest) {
         Employee employee = Employee.builder()
-                .id(employeeRequest.getId())
+               // .id(employeeRequest.getId())
                 .email(employeeRequest.getEmail())
                 .firstName(employeeRequest.getFirstName())
                 .lastName(employeeRequest.getLastName())
@@ -42,4 +43,28 @@ public class EmployeeService {
         employeeRepo.save(employee);
     }
 
+    public EmployeeResponse getEmployeeById(Long id) {
+        Employee employee = employeeRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found by id " + id));
+        return this.mapToEmployeeResponse(employee);
+    }
+
+    public EmployeeResponse updateEmployee(Long id, EmployeeRequest employeeRequest) {
+        Employee employee = employeeRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found by id " + id));
+
+        employee.setFirstName(employeeRequest.getFirstName());
+        employee.setLastName(employeeRequest.getLastName());
+        employee.setEmail(employeeRequest.getEmail());
+
+        employeeRepo.save(employee);
+        return this.mapToEmployeeResponse(employee);
+    }
+
+    public void deleteEmployee(Long id) {
+        Employee employee = employeeRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found by id " + id));
+
+        employeeRepo.delete(employee);
+    }
 }
